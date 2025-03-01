@@ -21,7 +21,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         splashViewController.delegate = self
         window?.rootViewController = splashViewController
         window?.makeKeyAndVisible()
-        window?.backgroundColor = .background
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {}
@@ -37,6 +36,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate: SplashViewControllerDelegate {
     func didSplashFinish() {
-        print("finish")
+        window?.rootViewController = LoginViewController()
     }
 }

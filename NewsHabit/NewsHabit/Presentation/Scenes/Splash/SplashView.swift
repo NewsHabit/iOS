@@ -21,6 +21,7 @@ final class SplashView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        setupView()
         setupLayout()
     }
     
@@ -30,6 +31,10 @@ final class SplashView: UIView {
     }
     
     // MARK: - Setup Methods
+    
+    private func setupView() {
+        backgroundColor = .background
+    }
     
     private func setupLayout() {
         addSubview(logoImageView)
