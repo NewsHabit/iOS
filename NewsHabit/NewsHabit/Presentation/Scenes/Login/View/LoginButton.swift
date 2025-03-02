@@ -41,6 +41,7 @@ final class LoginButton: UIButton {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.spacing = 8
+        stackView.isUserInteractionEnabled = false
         return stackView
     }()
     
