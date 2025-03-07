@@ -91,6 +91,11 @@ final class LineTextField: UIView {
     
     // MARK: - Configure Methods
     
+    @discardableResult
+    override func becomeFirstResponder() -> Bool {
+        return textField.becomeFirstResponder()
+    }
+    
     func setStatus(_ status: LineTextFieldStatus) {
         switch status {
         case .normal:
