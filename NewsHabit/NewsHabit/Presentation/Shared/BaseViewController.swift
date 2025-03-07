@@ -8,6 +8,11 @@
 import UIKit
 import SnapKit
 
+enum NavigationBarStyle {
+    case back(String)
+    case backAndRefresh(String)
+}
+
 /// 커스텀 네비게이션 바를 구성할 수 있는 뷰 컨트롤러
 class BaseViewController<View: UIView>: UIViewController {
     // MARK: - Components
