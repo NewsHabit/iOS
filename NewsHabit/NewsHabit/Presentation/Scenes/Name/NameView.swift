@@ -74,4 +74,18 @@ final class NameView: UIView {
             make.height.equalTo(52)
         }
     }
+    
+    // MARK: - Configure Methods
+    
+    func updateNextButtonBottomConstraint(_ keyboardHeight: CGFloat = 0) {
+        nextButton.snp.remakeConstraints { make in
+            make.bottom.equalToSuperview().inset(keyboardHeight + 34)
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.height.equalTo(52)
+        }
+        
+        UIView.animate(withDuration: 0.35) {
+            self.layoutIfNeeded()
+        }
+    }
 }

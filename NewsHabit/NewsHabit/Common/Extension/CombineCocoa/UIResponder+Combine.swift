@@ -9,10 +9,10 @@ import Combine
 import UIKit
 
 extension UIResponder {
-    var keyboardShowPublisher: AnyPublisher<CGRect, Never> {
+    var keyboardShowPublisher: AnyPublisher<CGFloat, Never> {
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
             .compactMap { $0.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue }
-            .map { $0.cgRectValue }
+            .map { $0.cgRectValue.height }
             .eraseToAnyPublisher()
     }
     
