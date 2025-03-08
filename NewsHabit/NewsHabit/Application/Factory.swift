@@ -13,4 +13,10 @@ final class Factory {
         let viewController = CategoryViewController(viewModel: viewModel)
         return viewController
     }
+    
+    static func makeDailyGoalViewController() -> DailyGoalViewController {
+        let viewModel = DailyGoalViewModel()
+        let viewController = DailyGoalViewController(viewModel: viewModel)
+        return viewController
+    }
 }

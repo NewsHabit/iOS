@@ -1,21 +1,21 @@
 //
-//  CategoryViewController.swift
+//  DailyGoalViewController.swift
 //  NewsHabit
 //
-//  Created by 지연 on 3/7/25.
+//  Created by 지연 on 3/9/25.
 //
 
 import Combine
 import UIKit
 
-final class CategoryViewController: BaseViewController<CategoryView> {
-    private let viewModel: CategoryViewModel
-    private var dataSource: UICollectionViewDiffableDataSource<Int, CategoryModel>!
+final class DailyGoalViewController: BaseViewController<DailyGoalView> {
+    private let viewModel: DailyGoalViewModel
+    private var dataSource: UICollectionViewDiffableDataSource<Int, DailyGoalModel>!
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init
     
-    init(viewModel: CategoryViewModel) {
+    init(viewModel: DailyGoalViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -43,7 +43,7 @@ final class CategoryViewController: BaseViewController<CategoryView> {
             cellProvider: { collectionView, indexPath, itemIdentifier in
                 let cell = collectionView.dequeueReusableCell(
                     for: indexPath,
-                    cellType: CategoryCell.self
+                    cellType: DailyGoalCell.self
                 )
                 cell.configure(with: itemIdentifier)
                 return cell
@@ -52,50 +52,41 @@ final class CategoryViewController: BaseViewController<CategoryView> {
     }
     
     private func setupBindings() {
-        // action
-        nextButton.tapPublisher
-            .sink { [weak self] in
-                self?.navigate(to: Factory.makeDailyGoalViewController(), animated: false)
-            }
-            .store(in: &cancellables)
-        
-        // state
-        viewModel.state.categoryModels
+        viewModel.state.dailyGoalModels
             .sink { [weak self] models in
                 self?.applySnapshot(with: models)
             }
             .store(in: &cancellables)
     }
     
-    private func applySnapshot(with models: [CategoryModel]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, CategoryModel>()
+    private func applySnapshot(with models: [DailyGoalModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, DailyGoalModel>()
         snapshot.appendSections([0])
         snapshot.appendItems(models, toSection: 0)
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 
-extension CategoryViewController: UICollectionViewDelegateFlowLayout {
+extension DailyGoalViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let width = (collectionView.frame.width - 10) / 2
-        return CGSize(width: width, height: 52)
+        return CGSize(width: collectionView.frame.width, height: 72)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewModel.send(.categoryCellDidSelect(index: indexPath.row))
+        viewModel.send(.dailyGoalCellDidSelect(index: indexPath.row))
     }
 }
 
-private extension CategoryViewController {
+private extension DailyGoalViewController {
     var collectionView: UICollectionView {
         contentView.collectionView
     }
     
-    var nextButton: UIButton {
-        contentView.nextButton
+    var startButton: UIButton {
+        contentView.startButton
     }
 }
