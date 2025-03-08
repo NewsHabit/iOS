@@ -38,6 +38,16 @@ final class LoginViewController: BaseViewController<LoginView> {
                 self?.navigate(to: NameViewController(), animated: false)
             }
             .store(in: &cancellables)
+        
+        skipButton.tapPublisher
+            .sink { [weak self] in
+                self?.showAlert(.alert(
+                    title: "로그인 오류",
+                    message: "잠시 후 다시 시도해 주세요",
+                    actionText: "확인"
+                ))
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -52,5 +62,9 @@ private extension LoginViewController {
     
     var kakaoLoginButton: UIButton {
         contentView.kakaoLoginButton
+    }
+    
+    var skipButton: UIButton {
+        contentView.skipButton
     }
 }
