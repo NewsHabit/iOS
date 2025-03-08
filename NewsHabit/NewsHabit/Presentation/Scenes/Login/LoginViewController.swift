@@ -10,6 +10,7 @@ import UIKit
 
 final class LoginViewController: BaseViewController<LoginView> {
     private var cancellables = Set<AnyCancellable>()
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -20,7 +21,6 @@ final class LoginViewController: BaseViewController<LoginView> {
     // MARK: - Setup Methods
     
     private func setupBindings() {
-        // action
         appleLoginButton.tapPublisher
             .sink { [weak self] in
                 self?.navigate(to: NameViewController(), animated: false)

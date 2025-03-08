@@ -15,24 +15,30 @@ final class NameViewController: BaseViewController<NameView> {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupActionBindings()
+        setupBindings()
         textField.becomeFirstResponder()
     }
     
     // MARK: - Setup Methods
     
-    private func setupActionBindings() {
-        keyboardShowPublisher.sink { [weak self] keyboardHeight in
-            self?.contentView.updateNextButtonBottomConstraint(keyboardHeight)
-        }.store(in: &cancellables)
+    private func setupBindings() {
+        keyboardShowPublisher
+            .sink { [weak self] keyboardHeight in
+                self?.contentView.updateNextButtonBottomConstraint(keyboardHeight)
+            }
+            .store(in: &cancellables)
         
-        keyboardHidePublisher.sink { [weak self] in
-            self?.contentView.updateNextButtonBottomConstraint()
-        }.store(in: &cancellables)
+        keyboardHidePublisher
+            .sink { [weak self] in
+                self?.contentView.updateNextButtonBottomConstraint()
+            }
+            .store(in: &cancellables)
         
-        nextButton.tapPublisher.sink { [weak self] in
-            self?.navigate(to: CategoryViewController(), animated: false)
-        }.store(in: &cancellables)
+        nextButton.tapPublisher
+            .sink { [weak self] in
+                self?.navigate(to: Factory.makeCategoryViewController(), animated: false)
+            }
+            .store(in: &cancellables)
     }
 }
 
