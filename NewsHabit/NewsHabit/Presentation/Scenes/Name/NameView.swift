@@ -32,7 +32,6 @@ final class NameView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupLayout()
     }
     
     @available(*, unavailable)
@@ -42,23 +41,31 @@ final class NameView: UIView {
     
     // MARK: - Setup Methods
     
-    private func setupLayout() {
-        addSubview(stepBar)
-        stepBar.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview().inset(20)
-            make.height.equalTo(6)
-        }
-        
-        addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(stepBar.snp.bottom).offset(28)
-            make.leading.equalToSuperview().inset(20)
-        }
-        
-        addSubview(infoLabel)
-        infoLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
-            make.leading.equalToSuperview().inset(20)
+    func setupLayout(with usage: ComponentUsage) {
+        switch usage {
+        case .onboarding:
+            addSubview(stepBar)
+            stepBar.snp.makeConstraints { make in
+                make.top.leading.trailing.equalToSuperview().inset(20)
+                make.height.equalTo(6)
+            }
+            
+            addSubview(titleLabel)
+            titleLabel.snp.makeConstraints { make in
+                make.top.equalTo(stepBar.snp.bottom).offset(28)
+                make.leading.equalToSuperview().inset(20)
+            }
+            
+            addSubview(infoLabel)
+            infoLabel.snp.makeConstraints { make in
+                make.top.equalTo(titleLabel.snp.bottom).offset(8)
+                make.leading.equalToSuperview().inset(20)
+            }
+        case .settings:
+            addSubview(infoLabel)
+            infoLabel.snp.makeConstraints { make in
+                make.top.leading.equalToSuperview().inset(20)
+            }
         }
         
         addSubview(textField)

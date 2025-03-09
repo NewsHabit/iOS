@@ -33,7 +33,7 @@ final class OnboardingCoordinator: Coordinator {
     }
     
     private func showNameViewController() {
-        let viewController = NameViewController()
+        let viewController = NameViewController(for: .onboarding)
         viewController.delegate = self
         navigationController.pushViewController(viewController, animated: false)
     }

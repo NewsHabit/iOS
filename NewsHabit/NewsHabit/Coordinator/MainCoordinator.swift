@@ -26,6 +26,61 @@ final class MainCoordinator: Coordinator {
     
     private func showTabBarController() {
         let viewController = TabBarController()
+        
+        let homeViewController = HomeViewController()
+        let trendingViewController = TrendingViewController()
+        let settingsViewController = SettingsViewController()
+        settingsViewController.delegate = self
+        
+        viewController.setViewControllers(
+            [
+                makeViewController(
+                    from: homeViewController,
+                    image: .home,
+                    selectedImage: .homeFill
+                ),
+                makeViewController(
+                    from: trendingViewController,
+                    image: .news,
+                    selectedImage: .newsFill
+                ),
+                makeViewController(
+                    from: settingsViewController,
+                    image: .settings,
+                    selectedImage: .settingsFill
+                )
+            ],
+            animated: false
+        )
+        
         navigationController.pushViewController(viewController, animated: false)
+    }
+    
+    private func makeViewController(
+        from viewController: UIViewController,
+        image: UIImage,
+        selectedImage: UIImage
+    ) -> UIViewController {
+        let tabBarItem = UITabBarItem(title: nil, image: image, selectedImage: selectedImage)
+        viewController.tabBarItem = tabBarItem
+        return viewController
+    }
+    
+    private func showNameViewController() {
+        let viewController = NameViewController(for: .settings)
+        viewController.delegate = self
+        navigationController.pushViewController(viewController, animated: true)
+    }
+}
+
+extension MainCoordinator: SettingsViewControllerDelegate {
+    func navigateToName() {
+        showNameViewController()
+    }
+}
+
+extension MainCoordinator: NameViewControllerDelegate {
+    func nameDidFinish() {
+        navigationController.popViewController(animated: true)
     }
 }

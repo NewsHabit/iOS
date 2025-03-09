@@ -8,7 +8,12 @@
 import Combine
 import UIKit
 
+protocol SettingsViewControllerDelegate: AnyObject {
+    func navigateToName()
+}
+
 final class SettingsViewController: BaseViewController<SettingsView> {
+    weak var delegate: SettingsViewControllerDelegate?
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Lifecycle
@@ -28,6 +33,12 @@ final class SettingsViewController: BaseViewController<SettingsView> {
     // MARK: - Setup Methods
     
     private func setupBindings() {
+        nameButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.navigateToName()
+            }
+            .store(in: &cancellables)
+        
         logoutButton.tapPublisher
             .sink { [weak self] in
                 guard let self = self else { return }
@@ -47,7 +58,7 @@ final class SettingsViewController: BaseViewController<SettingsView> {
                     title: "데이터 초기화",
                     message: "정말 모든 데이터를 초기화하시겠어요?\n완독 기록과 북마크가 삭제되며,\n복구할 수 없습니다",
                     cancelText: "취소",
-                    actionText: "초기화"
+                    actionText: "초기화하기"
                 )) {}
             }
             .store(in: &cancellables)
@@ -59,7 +70,7 @@ final class SettingsViewController: BaseViewController<SettingsView> {
                     title: "계정 삭제",
                     message: "정말 계정을 삭제하시겠어요?\n모든 데이터가 영구적으로 삭제되며,\n복구할 수 없습니다",
                     cancelText: "취소",
-                    actionText: "계정 삭제"
+                    actionText: "삭제하기"
                 )) {}
             }
             .store(in: &cancellables)

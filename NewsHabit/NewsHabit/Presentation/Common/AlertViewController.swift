@@ -200,7 +200,7 @@ final class AlertViewController: UIViewController {
     
     func prepareForAnimation() {
         view.alpha = 0
-        containerView.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        containerView.transform = CGAffineTransform(scaleX: 1.07, y: 1.07)
     }
     
     func animateIn(completion: (() -> Void)? = nil) {

@@ -31,34 +31,6 @@ final class TabBarController: UITabBarController {
         tabBar.tintColor = .labelNormal
         tabBar.unselectedItemTintColor = .labelNormal
         tabBar.isTranslucent = false
-        
-        viewControllers = [
-            makeViewController(
-                from: HomeViewController(),
-                image: .home,
-                selectedImage: .homeFill
-            ),
-            makeViewController(
-                from: TrendingViewController(),
-                image: .news,
-                selectedImage: .newsFill
-            ),
-            makeViewController(
-                from: SettingsViewController(),
-                image: .settings,
-                selectedImage: .settingsFill
-            )
-        ]
-    }
-    
-    private func makeViewController(
-        from viewController: UIViewController,
-        image: UIImage,
-        selectedImage: UIImage
-    ) -> UIViewController {
-        let tabBarItem = UITabBarItem(title: nil, image: image, selectedImage: selectedImage)
-        viewController.tabBarItem = tabBarItem
-        return viewController
     }
     
     private func setupLayout() {
