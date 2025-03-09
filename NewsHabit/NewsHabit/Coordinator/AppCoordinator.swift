@@ -41,7 +41,7 @@ final class AppCoordinator: Coordinator {
     }
     
     private func showMainFlow() {
-        let navigationController = UINavigationController(rootViewController: TabBarController())
+        let navigationController = UINavigationController()
         window.rootViewController = navigationController
         
         let mainCoordinator = MainCoordinator(

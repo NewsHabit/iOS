@@ -33,9 +33,21 @@ final class TabBarController: UITabBarController {
         tabBar.isTranslucent = false
         
         viewControllers = [
-            makeViewController(from: UIViewController(), image: .home, selectedImage: .homeFill),
-            makeViewController(from: UIViewController(), image: .news, selectedImage: .newsFill),
-            makeViewController(from: UIViewController(), image: .settings, selectedImage: .settingsFill)
+            makeViewController(
+                from: HomeViewController(),
+                image: .home,
+                selectedImage: .homeFill
+            ),
+            makeViewController(
+                from: TrendingViewController(),
+                image: .news,
+                selectedImage: .newsFill
+            ),
+            makeViewController(
+                from: SettingsViewController(),
+                image: .settings,
+                selectedImage: .settingsFill
+            )
         ]
     }
     
@@ -46,7 +58,7 @@ final class TabBarController: UITabBarController {
     ) -> UIViewController {
         let tabBarItem = UITabBarItem(title: nil, image: image, selectedImage: selectedImage)
         viewController.tabBarItem = tabBarItem
-        return UINavigationController(rootViewController: viewController)
+        return viewController
     }
     
     private func setupLayout() {
