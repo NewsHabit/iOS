@@ -23,7 +23,7 @@ class BaseViewController<View: UIView>: UIViewController {
     
     private lazy var titleLabel = makeTitleLabel()
     
-    lazy var backButton = makeButton(with: .back)
+    lazy var backButton = makeButton(with: .chevronLeft)
     
     lazy var refreshButton = makeButton(with: .refresh)
     

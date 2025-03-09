@@ -230,7 +230,7 @@ private extension AlertViewController {
         button.clipsToBounds = true
         button.layer.cornerRadius = 12
         button.layer.maskedCorners = maskedCorners
-        button.setBackgroundImage(image(with: .white), for: .normal)
+        button.setBackgroundImage(image(with: .background), for: .normal)
         button.setBackgroundImage(image(with: .fillAssistive), for: .highlighted)
         return button
     }
