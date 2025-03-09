@@ -36,14 +36,14 @@ final class SettingsView: UIView {
     
     let resetButton = SettingsButton(type: .normal)
     
-    let deleteAccountButton = SettingsButton(type: .normal)
+    let deleteAccountButton = SettingsButton(type: .normal, isDimmed: true)
     
     // MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
-        configureAccountButtons()
+        configureImmutableButtons()
     }
     
     @available(*, unavailable)
@@ -66,7 +66,7 @@ final class SettingsView: UIView {
             make.leading.trailing.equalToSuperview()
         }
         
-        [nameButton, categoryButton, dailyGoalButton, notificationButton].forEach {
+        [nameButton, categoryButton, dailyGoalButton, notificationButton, contactButton].forEach {
             userStackView.addArrangedSubview($0)
             $0.snp.makeConstraints { make in
                 make.height.equalTo(44)
@@ -79,7 +79,7 @@ final class SettingsView: UIView {
             make.leading.trailing.equalToSuperview()
         }
         
-        [contactButton, logoutButton, resetButton, deleteAccountButton].forEach {
+        [logoutButton, resetButton, deleteAccountButton].forEach {
             accountStackView.addArrangedSubview($0)
             $0.snp.makeConstraints { make in
                 make.height.equalTo(44)
@@ -89,7 +89,7 @@ final class SettingsView: UIView {
     
     // MARK: - Configure Methods
     
-    private func configureAccountButtons() {
+    private func configureImmutableButtons() {
         contactButton.configure(with: "문의하기")
         logoutButton.configure(with: "로그아웃")
         resetButton.configure(with: "데이터 초기화")

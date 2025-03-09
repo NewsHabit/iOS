@@ -19,7 +19,6 @@ final class SettingsButton: UIButton {
     private let label = {
         let label = UILabel()
         label.font = .regular(size: 16)
-        label.textColor = .labelNormal
         return label
     }()
     
@@ -39,9 +38,9 @@ final class SettingsButton: UIButton {
     
     // MARK: - Init
     
-    init(type: SettingsButtonType) {
+    init(type: SettingsButtonType, isDimmed: Bool = false) {
         super.init(frame: .zero)
-        setupButton()
+        setupButton(with: isDimmed)
         setupLayout(with: type)
     }
     
@@ -52,7 +51,8 @@ final class SettingsButton: UIButton {
     
     // MARK: - Setup Methods
     
-    private func setupButton() {
+    private func setupButton(with isDimmed: Bool) {
+        label.textColor = isDimmed ? .labelAssistive : .labelNormal
         setBackgroundImage(image(with: .background), for: .normal)
         setBackgroundImage(image(with: .fillAssistive), for: .highlighted)
     }
