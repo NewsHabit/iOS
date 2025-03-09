@@ -17,7 +17,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = ViewController()
+        let splashViewController = SplashViewController()
+        splashViewController.delegate = self
+        window?.rootViewController = splashViewController
         window?.makeKeyAndVisible()
     }
 
@@ -30,4 +32,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {}
 
     func sceneDidEnterBackground(_ scene: UIScene) {}
+}
+
+extension SceneDelegate: SplashViewControllerDelegate {
+    func didSplashFinish() {
+        window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+    }
 }
