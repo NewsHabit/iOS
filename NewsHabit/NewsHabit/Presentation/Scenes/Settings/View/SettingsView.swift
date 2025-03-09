@@ -93,7 +93,7 @@ final class SettingsView: UIView {
         contactButton.configure(with: "문의하기")
         logoutButton.configure(with: "로그아웃")
         resetButton.configure(with: "데이터 초기화")
-        deleteAccountButton.configure(with: "회원 탈퇴")
+        deleteAccountButton.configure(with: "계정 삭제")
     }
     
     func configure(with model: SettingsModel) {

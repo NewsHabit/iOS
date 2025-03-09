@@ -10,6 +10,7 @@ import UIKit
 enum AlertType {
     case alert(title: String, message: String?, actionText: String)
     case confirm(title: String, message: String?, cancelText: String, actionText: String)
+    case warning(title: String, message: String?, cancelText: String, actionText: String)
 }
 
 final class AlertViewController: UIViewController {
@@ -96,7 +97,7 @@ final class AlertViewController: UIViewController {
     private func setupLayout() {
         view.addSubview(containerView)
         containerView.snp.makeConstraints { make in
-            make.width.equalToSuperview().multipliedBy(0.7)
+            make.width.equalToSuperview().multipliedBy(0.8)
             make.center.equalToSuperview()
         }
         
@@ -120,18 +121,26 @@ final class AlertViewController: UIViewController {
     private func configure(with type: AlertType) {
         switch type {
         case .alert(let title, let message, let actionText):
-            configureAlert(title: title, message: message, actionText: actionText)
+            configureSingleButton(title: title, message: message, actionText: actionText)
         case .confirm(let title, let message, let cancelText, let actionText):
-            configureConfirm(
+            configureDoubeButtons(
                 title: title,
                 message: message,
                 cancelText: cancelText,
                 actionText: actionText
             )
+        case .warning(let title, let message, let cancelText, let actionText):
+            configureDoubeButtons(
+                title: title,
+                message: message,
+                cancelText: cancelText,
+                actionText: actionText,
+                isDangerous: true
+            )
         }
     }
     
-    private func configureAlert(title: String, message: String?, actionText: String) {
+    private func configureSingleButton(title: String, message: String?, actionText: String) {
         titleLabel.text = title
         titleLabel.setLineHeight(24)
         messageLabel.text = message
@@ -151,11 +160,12 @@ final class AlertViewController: UIViewController {
         self.actionButton = actionButton
     }
     
-    private func configureConfirm(
+    private func configureDoubeButtons(
         title: String,
         message: String?,
         cancelText: String,
-        actionText: String
+        actionText: String,
+        isDangerous: Bool = false
     ) {
         titleLabel.text = title
         titleLabel.setLineHeight(24)
@@ -172,7 +182,10 @@ final class AlertViewController: UIViewController {
         self.cancelButton = cancelButton
         buttonStackView.addArrangedSubview(cancelButton)
         // action button
-        let actionButton = makeButton(with: .primaryStrong, maskedCorners: [.layerMaxXMaxYCorner])
+        let actionButton = makeButton(
+            with: isDangerous ? .point : .primaryStrong,
+            maskedCorners: [.layerMaxXMaxYCorner]
+        )
         actionButton.setTitle(actionText, for: .normal)
         actionButton.addTarget(
             self,
