@@ -8,7 +8,12 @@
 import Combine
 import UIKit
 
+protocol NameViewControllerDelegate: AnyObject {
+    func nameDidFinish()
+}
+
 final class NameViewController: BaseViewController<NameView> {
+    weak var delegate: NameViewControllerDelegate?
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Lifecycle
@@ -36,7 +41,7 @@ final class NameViewController: BaseViewController<NameView> {
         
         nextButton.tapPublisher
             .sink { [weak self] in
-                self?.navigate(to: Factory.makeCategoryViewController(), animated: false)
+                self?.delegate?.nameDidFinish()
             }
             .store(in: &cancellables)
     }

@@ -8,7 +8,12 @@
 import Combine
 import UIKit
 
+protocol CategoryViewControllerDelegate: AnyObject {
+    func categoryDidFinish()
+}
+
 final class CategoryViewController: BaseViewController<CategoryView> {
+    weak var delegate: CategoryViewControllerDelegate?
     private let viewModel: CategoryViewModel
     private var dataSource: UICollectionViewDiffableDataSource<Int, CategoryModel>!
     private var cancellables = Set<AnyCancellable>()
@@ -55,7 +60,7 @@ final class CategoryViewController: BaseViewController<CategoryView> {
         // action
         nextButton.tapPublisher
             .sink { [weak self] in
-                self?.navigate(to: Factory.makeDailyGoalViewController(), animated: false)
+                self?.delegate?.categoryDidFinish()
             }
             .store(in: &cancellables)
         

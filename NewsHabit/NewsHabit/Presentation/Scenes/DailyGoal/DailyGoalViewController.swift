@@ -8,7 +8,12 @@
 import Combine
 import UIKit
 
+protocol DailyGoalViewControllerDelegate: AnyObject {
+    func dailyGoalDidFinish()
+}
+
 final class DailyGoalViewController: BaseViewController<DailyGoalView> {
+    weak var delegate: DailyGoalViewControllerDelegate?
     private let viewModel: DailyGoalViewModel
     private var dataSource: UICollectionViewDiffableDataSource<Int, DailyGoalModel>!
     private var cancellables = Set<AnyCancellable>()
@@ -55,7 +60,7 @@ final class DailyGoalViewController: BaseViewController<DailyGoalView> {
         // action
         startButton.tapPublisher
             .sink { [weak self] in
-                self?.navigate(to: TabBarController(), animated: false)
+                self?.delegate?.dailyGoalDidFinish()
             }
             .store(in: &cancellables)
         

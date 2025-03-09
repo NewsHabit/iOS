@@ -9,6 +9,7 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    var appCoordinator: AppCoordinator?
 
     func scene(
         _ scene: UIScene,
@@ -35,7 +36,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 extension SceneDelegate: SplashViewControllerDelegate {
-    func didSplashFinish() {
-        window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+    func splashDidFinish() {
+        guard let window = window else { return }
+        appCoordinator = AppCoordinator(window: window)
+        appCoordinator?.start()
     }
 }

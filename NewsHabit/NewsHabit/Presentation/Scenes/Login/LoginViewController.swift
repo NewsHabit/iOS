@@ -8,7 +8,12 @@
 import Combine
 import UIKit
 
+protocol LoginViewControllerDelegate: AnyObject {
+    func loginDidFinish()
+}
+
 final class LoginViewController: BaseViewController<LoginView> {
+    weak var delegate: LoginViewControllerDelegate?
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Lifecycle
@@ -23,19 +28,19 @@ final class LoginViewController: BaseViewController<LoginView> {
     private func setupBindings() {
         appleLoginButton.tapPublisher
             .sink { [weak self] in
-                self?.navigate(to: NameViewController(), animated: false)
+                self?.delegate?.loginDidFinish()
             }
             .store(in: &cancellables)
         
         googleLoginButton.tapPublisher
             .sink { [weak self] in
-                self?.navigate(to: NameViewController(), animated: false)
+                self?.delegate?.loginDidFinish()
             }
             .store(in: &cancellables)
         
         kakaoLoginButton.tapPublisher
             .sink { [weak self] in
-                self?.navigate(to: NameViewController(), animated: false)
+                self?.delegate?.loginDidFinish()
             }
             .store(in: &cancellables)
         

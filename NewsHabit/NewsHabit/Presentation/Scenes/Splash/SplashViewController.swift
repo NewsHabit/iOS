@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SplashViewControllerDelegate: AnyObject {
-    func didSplashFinish()
+    func splashDidFinish()
 }
 
 final class SplashViewController: UIViewController {
@@ -23,7 +23,7 @@ final class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            self.delegate?.didSplashFinish()
+            self.delegate?.splashDidFinish()
         }
     }
 }
