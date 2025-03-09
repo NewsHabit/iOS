@@ -52,6 +52,14 @@ final class DailyGoalViewController: BaseViewController<DailyGoalView> {
     }
     
     private func setupBindings() {
+        // action
+        startButton.tapPublisher
+            .sink { [weak self] in
+                self?.navigate(to: TabBarController(), animated: false)
+            }
+            .store(in: &cancellables)
+        
+        // state
         viewModel.state.dailyGoalModels
             .sink { [weak self] models in
                 self?.applySnapshot(with: models)
