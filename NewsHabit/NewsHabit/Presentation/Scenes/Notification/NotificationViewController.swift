@@ -10,7 +10,7 @@ import UIKit
 
 protocol NotificationViewControllerDelegate: AnyObject {
     func notificationDidFinish()
-    func presentNotificationTime()
+    func presentNotificationTime(time: String, delegate: NotificationTimeViewControllerDelegate)
 }
 
 final class NotificationViewController: BaseViewController<NotificationView> {
@@ -30,13 +30,13 @@ final class NotificationViewController: BaseViewController<NotificationView> {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar(with: .back("알림"))
         setupBindings()
+        viewModel.send(.viewDidLoad)
     }
     
     // MARK: - Setup Methods
@@ -58,7 +58,7 @@ final class NotificationViewController: BaseViewController<NotificationView> {
         
         notificationTimeButton.tapPublisher
             .sink { [weak self] in
-                self?.delegate?.presentNotificationTime()
+                self?.viewModel.send(.notificationTimeButtonDidTap)
             }
             .store(in: &cancellables)
         
@@ -76,6 +76,19 @@ final class NotificationViewController: BaseViewController<NotificationView> {
                 self?.notificationTimeButton.configure(with: time)
             }
             .store(in: &cancellables)
+        
+        viewModel.state.navigatePublisher
+            .sink { [weak self] time in
+                guard let self = self else { return }
+                delegate?.presentNotificationTime(time: time, delegate: self)
+            }
+            .store(in: &cancellables)
+    }
+}
+
+extension NotificationViewController: NotificationTimeViewControllerDelegate {
+    func notificationTimeDidUpdate(time: String) {
+        viewModel.send(.notificationTimeDidUpdate(time: time))
     }
 }
 

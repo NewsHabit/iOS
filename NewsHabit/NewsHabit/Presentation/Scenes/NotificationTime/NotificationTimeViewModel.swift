@@ -93,8 +93,9 @@ final class NotificationTimeViewModel: ViewModel {
               let hour = hour,
               let minute = minute
         else { return }
+        let formattedHour = hour.count == 1 ? "0" + hour : hour // "0" -> "00"
         let formattedMinute = minute.count == 1 ? "0" + minute : minute // "0" -> "00"
-        let time = "\(meridiem) \(hour) : \(formattedMinute)"
+        let time = "\(meridiem) \(formattedHour):\(formattedMinute)"
         state.dismissPublisher.send(time)
     }
 }

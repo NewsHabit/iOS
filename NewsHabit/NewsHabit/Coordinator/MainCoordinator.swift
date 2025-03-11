@@ -93,9 +93,13 @@ final class MainCoordinator: Coordinator {
         navigationController.pushViewController(viewController, animated: true)
     }
     
-    private func showNotificationTimeViewController() {
-        let viewModel = NotificationTimeViewModel(time: "오전 09:00")
+    private func showNotificationTimeViewController(
+        time: String,
+        delegate: NotificationTimeViewControllerDelegate
+    ) {
+        let viewModel = NotificationTimeViewModel(time: time)
         let viewController = NotificationTimeViewController(viewModel: viewModel)
+        viewController.delegate = delegate
         navigationController.present(viewController, animated: false)
     }
 }
@@ -141,7 +145,7 @@ extension MainCoordinator: NotificationViewControllerDelegate {
         navigationController.popViewController(animated: true)
     }
     
-    func presentNotificationTime() {
-        showNotificationTimeViewController()
+    func presentNotificationTime(time: String, delegate: NotificationTimeViewControllerDelegate) {
+        showNotificationTimeViewController(time: time, delegate: delegate)
     }
 }
