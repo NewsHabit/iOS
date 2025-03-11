@@ -71,16 +71,33 @@ final class MainCoordinator: Coordinator {
         viewController.delegate = self
         navigationController.pushViewController(viewController, animated: true)
     }
+    
+    private func showCategoryViewController() {
+        let viewModel = CategoryViewModel()
+        let viewController = CategoryViewController(viewModel: viewModel, for: .settings)
+        viewController.delegate = self
+        navigationController.pushViewController(viewController, animated: true)
+    }
 }
 
 extension MainCoordinator: SettingsViewControllerDelegate {
     func navigateToName() {
         showNameViewController()
     }
+    
+    func navigateToCategory() {
+        showCategoryViewController()
+    }
 }
 
 extension MainCoordinator: NameViewControllerDelegate {
     func nameDidFinish() {
+        navigationController.popViewController(animated: true)
+    }
+}
+
+extension MainCoordinator: CategoryViewControllerDelegate {
+    func categoryDidFinish() {
         navigationController.popViewController(animated: true)
     }
 }

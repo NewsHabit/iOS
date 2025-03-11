@@ -28,17 +28,6 @@ final class NameView: UIView {
     
     let nextButton = ConfirmButton(title: "다음")
     
-    // MARK: - Init
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     // MARK: - Setup Methods
     
     func setupLayout(with usage: ComponentUsage) {

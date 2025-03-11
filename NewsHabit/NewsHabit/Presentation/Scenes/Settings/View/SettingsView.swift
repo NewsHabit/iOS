@@ -98,7 +98,7 @@ final class SettingsView: UIView {
     
     func configure(with model: SettingsModel) {
         nameButton.configure(with: "이름", description: model.name)
-        categoryButton.configure(with: "카테고리", description: model.category)
+        categoryButton.configure(with: "관심 카테고리", description: model.category)
         dailyGoalButton.configure(with: "읽기 목표", description: model.dailyGoal)
         notificationButton.configure(with: "알림", description: model.notification)
     }

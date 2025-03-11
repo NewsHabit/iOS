@@ -41,6 +41,7 @@ final class InfoLabel: UIView {
     
     private func setupLabel(with text: String) {
         label.text = text
+        label.setLineHeight(20)
     }
     
     private func setupLayout() {

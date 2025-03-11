@@ -10,6 +10,7 @@ import UIKit
 
 protocol SettingsViewControllerDelegate: AnyObject {
     func navigateToName()
+    func navigateToCategory()
 }
 
 final class SettingsViewController: BaseViewController<SettingsView> {
@@ -36,6 +37,12 @@ final class SettingsViewController: BaseViewController<SettingsView> {
         nameButton.tapPublisher
             .sink { [weak self] in
                 self?.delegate?.navigateToName()
+            }
+            .store(in: &cancellables)
+        
+        categoryButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.navigateToCategory()
             }
             .store(in: &cancellables)
         

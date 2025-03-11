@@ -20,9 +20,11 @@ final class CategoryViewController: BaseViewController<CategoryView> {
     
     // MARK: - Init
     
-    init(viewModel: CategoryViewModel) {
+    init(viewModel: CategoryViewModel, for usage: ComponentUsage) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        contentView.setupLayout(with: usage)
+        if usage == .settings { configureNavigationBar(with: .back("관심 카테고리")) }
     }
     
     @available(*, unavailable)
@@ -58,6 +60,12 @@ final class CategoryViewController: BaseViewController<CategoryView> {
     
     private func setupBindings() {
         // action
+        backButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.categoryDidFinish()
+            }
+            .store(in: &cancellables)
+        
         nextButton.tapPublisher
             .sink { [weak self] in
                 self?.delegate?.categoryDidFinish()

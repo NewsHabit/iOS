@@ -40,7 +40,7 @@ final class OnboardingCoordinator: Coordinator {
     
     private func showCategoryViewController() {
         let viewModel = CategoryViewModel()
-        let viewController = CategoryViewController(viewModel: viewModel)
+        let viewController = CategoryViewController(viewModel: viewModel, for: .onboarding)
         viewController.delegate = self
         navigationController.pushViewController(viewController, animated: false)
     }
