@@ -94,7 +94,8 @@ final class MainCoordinator: Coordinator {
     }
     
     private func showNotificationTimeViewController() {
-        let viewController = NotificationTimeViewController()
+        let viewModel = NotificationTimeViewModel(time: "오전 09:00")
+        let viewController = NotificationTimeViewController(viewModel: viewModel)
         navigationController.present(viewController, animated: false)
     }
 }

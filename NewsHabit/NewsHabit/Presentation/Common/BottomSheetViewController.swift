@@ -19,6 +19,12 @@ class BottomSheetViewController<View: UIView>: UIViewController {
         return view
     }()
     
+    private let indicator = {
+        let view = UIView()
+        view.backgroundColor = .lineNormal
+        return view
+    }()
+    
     let contentView = {
         let view = View()
         view.backgroundColor = .white
@@ -90,6 +96,14 @@ class BottomSheetViewController<View: UIView>: UIViewController {
             make.height.equalTo(bottomSheetHeight)
             make.top.equalTo(view.snp.bottom)
             make.leading.trailing.equalToSuperview()
+        }
+        
+        contentView.addSubview(indicator)
+        indicator.snp.makeConstraints { make in
+            make.width.equalTo(40)
+            make.height.equalTo(4)
+            make.top.equalToSuperview().inset(8)
+            make.centerX.equalToSuperview()
         }
     }
     
