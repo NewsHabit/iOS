@@ -50,7 +50,12 @@ final class NotificationViewModel: ViewModel {
         case .notificationTimeButtonDidTap:
             state.navigatePublisher.send(notificationTime)
         case .notificationTimeDidUpdate(let time):
-            state.notificationTime.send(time)
+            handleNotificationTimeDidUpdate(time: time)
         }
+    }
+    
+    private func handleNotificationTimeDidUpdate(time: String) {
+        state.notificationTime.send(time)
+        notificationTime = time
     }
 }

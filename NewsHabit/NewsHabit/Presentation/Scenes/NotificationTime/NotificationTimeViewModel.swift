@@ -37,21 +37,22 @@ final class NotificationTimeViewModel: ViewModel {
     // MARK: - Init
     
     init(time: String) {
-        let components = time.components(separatedBy: [" ", ":", " "]).filter { !$0.isEmpty }
-        if components.count == 3 {
-            meridiem = components[0]
-            if let hourValue = Int(components[1]) {
-                hour = String(hourValue) // "00" -> "0"
-            }
-            if let minuteValue = Int(components[2]) {
-                minute = String(minuteValue) // "00" -> "0"
-            }
-        }
+        parseTime(time)
         
-        actionSubject.sink { [weak self] action in
-            self?.handleAction(action)
-        }
-        .store(in: &cancellables)
+        actionSubject
+            .sink { [weak self] action in self?.handleAction(action) }
+            .store(in: &cancellables)
+    }
+    
+    // MARK: - Time Parsing
+    
+    private func parseTime(_ time: String) {
+        let components = time.components(separatedBy: [" ", ":", " "]).filter { !$0.isEmpty }
+        guard components.count == 3 else { return }
+        
+        meridiem = components[0]
+        hour = String(Int(components[1]) ?? 0) // "00" -> "0"
+        minute = String(Int(components[2]) ?? 0) // "00" -> "0"
     }
     
     // MARK: - Handle Action Methods
@@ -91,11 +92,15 @@ final class NotificationTimeViewModel: ViewModel {
     private func handleDoneButtonDidTap() {
         guard let meridiem = meridiem,
               let hour = hour,
-              let minute = minute
-        else { return }
-        let formattedHour = hour.count == 1 ? "0" + hour : hour // "0" -> "00"
-        let formattedMinute = minute.count == 1 ? "0" + minute : minute // "0" -> "00"
+              let minute = minute else { return }
+        
+        let formattedHour = formatToTwoDigits(hour)
+        let formattedMinute = formatToTwoDigits(minute)
         let time = "\(meridiem) \(formattedHour):\(formattedMinute)"
         state.dismissPublisher.send(time)
+    }
+    
+    private func formatToTwoDigits(_ value: String) -> String {
+        return value.count == 1 ? "0" + value : value
     }
 }
