@@ -12,6 +12,7 @@ protocol SettingsViewControllerDelegate: AnyObject {
     func navigateToName()
     func navigateToCategory()
     func navigateToDailyGoal()
+    func navigateToNotification()
 }
 
 final class SettingsViewController: BaseViewController<SettingsView> {
@@ -50,6 +51,12 @@ final class SettingsViewController: BaseViewController<SettingsView> {
         dailyGoalButton.tapPublisher
             .sink { [weak self] in
                 self?.delegate?.navigateToDailyGoal()
+            }
+            .store(in: &cancellables)
+        
+        notificationButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.navigateToNotification()
             }
             .store(in: &cancellables)
         

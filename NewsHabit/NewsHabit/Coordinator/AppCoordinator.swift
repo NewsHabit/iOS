@@ -24,7 +24,7 @@ final class AppCoordinator: Coordinator {
     }
     
     private func needsOnboarding() -> Bool {
-        return true
+        return false
     }
     
     private func showOnboardingFlow() {

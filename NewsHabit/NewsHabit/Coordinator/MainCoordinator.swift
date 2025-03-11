@@ -85,6 +85,13 @@ final class MainCoordinator: Coordinator {
         viewController.delegate = self
         navigationController.pushViewController(viewController, animated: true)
     }
+    
+    private func showNotificationViewController() {
+        let viewModel = NotificationViewModel()
+        let viewController = NotificationViewController(viewModel: viewModel)
+        viewController.delegate = self
+        navigationController.pushViewController(viewController, animated: true)
+    }
 }
 
 extension MainCoordinator: SettingsViewControllerDelegate {
@@ -98,6 +105,10 @@ extension MainCoordinator: SettingsViewControllerDelegate {
     
     func navigateToDailyGoal() {
         showDailyGoalViewController()
+    }
+    
+    func navigateToNotification() {
+        showNotificationViewController()
     }
 }
 
@@ -115,6 +126,12 @@ extension MainCoordinator: CategoryViewControllerDelegate {
 
 extension MainCoordinator: DailyGoalViewControllerDelegate {
     func dailyGoalDidFinish() {
+        navigationController.popViewController(animated: true)
+    }
+}
+
+extension MainCoordinator: NotificationViewControllerDelegate {
+    func notificationDidFinish() {
         navigationController.popViewController(animated: true)
     }
 }
