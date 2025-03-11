@@ -47,7 +47,7 @@ final class OnboardingCoordinator: Coordinator {
     
     private func showDailyGoalViewController() {
         let viewModel = DailyGoalViewModel()
-        let viewController = DailyGoalViewController(viewModel: viewModel)
+        let viewController = DailyGoalViewController(viewModel: viewModel, for: .onboarding)
         viewController.delegate = self
         navigationController.pushViewController(viewController, animated: false)
     }

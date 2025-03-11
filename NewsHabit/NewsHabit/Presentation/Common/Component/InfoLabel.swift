@@ -48,13 +48,13 @@ final class InfoLabel: UIView {
         addSubview(infoImageView)
         infoImageView.snp.makeConstraints { make in
             make.width.height.equalTo(18)
-            make.top.leading.bottom.equalToSuperview()
+            make.leading.centerY.equalToSuperview()
         }
         
         addSubview(label)
         label.snp.makeConstraints { make in
             make.leading.equalTo(infoImageView.snp.trailing).offset(3)
-            make.trailing.centerY.equalToSuperview()
+            make.top.bottom.trailing.equalToSuperview()
         }
     }
 }

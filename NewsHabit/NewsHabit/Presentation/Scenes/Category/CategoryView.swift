@@ -27,6 +27,7 @@ final class CategoryView: UIView {
         stackView.axis = .vertical
         return stackView
     }()
+    
     private let guideLabel = {
         let label = UILabel()
         label.text = "관련된 기사를 매일 추천해 드릴게요"

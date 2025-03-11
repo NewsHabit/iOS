@@ -78,6 +78,13 @@ final class MainCoordinator: Coordinator {
         viewController.delegate = self
         navigationController.pushViewController(viewController, animated: true)
     }
+    
+    private func showDailyGoalViewController() {
+        let viewModel = DailyGoalViewModel()
+        let viewController = DailyGoalViewController(viewModel: viewModel, for: .settings)
+        viewController.delegate = self
+        navigationController.pushViewController(viewController, animated: true)
+    }
 }
 
 extension MainCoordinator: SettingsViewControllerDelegate {
@@ -87,6 +94,10 @@ extension MainCoordinator: SettingsViewControllerDelegate {
     
     func navigateToCategory() {
         showCategoryViewController()
+    }
+    
+    func navigateToDailyGoal() {
+        showDailyGoalViewController()
     }
 }
 
@@ -98,6 +109,12 @@ extension MainCoordinator: NameViewControllerDelegate {
 
 extension MainCoordinator: CategoryViewControllerDelegate {
     func categoryDidFinish() {
+        navigationController.popViewController(animated: true)
+    }
+}
+
+extension MainCoordinator: DailyGoalViewControllerDelegate {
+    func dailyGoalDidFinish() {
         navigationController.popViewController(animated: true)
     }
 }

@@ -20,7 +20,6 @@ extension UILabel {
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.minimumLineHeight = lineHeight
-        paragraphStyle.maximumLineHeight = lineHeight
         paragraphStyle.alignment = textAlignment
         
         let fullRange = NSRange(location: 0, length: attributedString.length)
@@ -28,7 +27,7 @@ extension UILabel {
             .paragraphStyle, value: paragraphStyle, range: fullRange)
         
         attributedString.addAttribute(
-            .baselineOffset, value: (lineHeight - font.lineHeight) / 4, range: fullRange
+            .baselineOffset, value: (lineHeight - font.lineHeight) / 2, range: fullRange
         )
         
         self.attributedText = attributedString

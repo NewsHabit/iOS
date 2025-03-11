@@ -20,9 +20,11 @@ final class DailyGoalViewController: BaseViewController<DailyGoalView> {
     
     // MARK: - Init
     
-    init(viewModel: DailyGoalViewModel) {
+    init(viewModel: DailyGoalViewModel, for usage: ComponentUsage) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        contentView.setupLayout(with: usage)
+        if usage == .settings { configureNavigationBar(with: .back("읽기 목표")) }
     }
     
     @available(*, unavailable)
@@ -58,7 +60,13 @@ final class DailyGoalViewController: BaseViewController<DailyGoalView> {
     
     private func setupBindings() {
         // action
-        startButton.tapPublisher
+        backButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.dailyGoalDidFinish()
+            }
+            .store(in: &cancellables)
+        
+        ctaButton.tapPublisher
             .sink { [weak self] in
                 self?.delegate?.dailyGoalDidFinish()
             }
@@ -99,7 +107,7 @@ private extension DailyGoalViewController {
         contentView.collectionView
     }
     
-    var startButton: UIButton {
-        contentView.startButton
+    var ctaButton: UIButton {
+        contentView.ctaButton
     }
 }
