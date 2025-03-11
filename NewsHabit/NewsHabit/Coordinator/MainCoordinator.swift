@@ -92,6 +92,11 @@ final class MainCoordinator: Coordinator {
         viewController.delegate = self
         navigationController.pushViewController(viewController, animated: true)
     }
+    
+    private func showNotificationTimeViewController() {
+        let viewController = NotificationTimeViewController()
+        navigationController.present(viewController, animated: false)
+    }
 }
 
 extension MainCoordinator: SettingsViewControllerDelegate {
@@ -133,5 +138,9 @@ extension MainCoordinator: DailyGoalViewControllerDelegate {
 extension MainCoordinator: NotificationViewControllerDelegate {
     func notificationDidFinish() {
         navigationController.popViewController(animated: true)
+    }
+    
+    func presentNotificationTime() {
+        showNotificationTimeViewController()
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 
 protocol NotificationViewControllerDelegate: AnyObject {
     func notificationDidFinish()
+    func presentNotificationTime()
 }
 
 final class NotificationViewController: BaseViewController<NotificationView> {
@@ -52,6 +53,12 @@ final class NotificationViewController: BaseViewController<NotificationView> {
             .removeDuplicates()
             .sink { [weak self] isOn in
                 self?.viewModel.send(.switchDidToggle(isOn: isOn))
+            }
+            .store(in: &cancellables)
+        
+        notificationTimeButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.presentNotificationTime()
             }
             .store(in: &cancellables)
         
