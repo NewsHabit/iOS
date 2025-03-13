@@ -56,13 +56,13 @@ final class SettingsView: UIView {
     private func setupLayout() {
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(28)
+            make.top.equalToSuperview().inset(24)
             make.leading.equalToSuperview().inset(20)
         }
         
         addSubview(userStackView)
         userStackView.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(42)
+            make.top.equalTo(titleLabel.snp.bottom).offset(28)
             make.leading.trailing.equalToSuperview()
         }
         
