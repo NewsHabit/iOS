@@ -63,7 +63,7 @@ class BottomSheetViewController<View: UIView>: UIViewController {
         }
         
         UIView.animate(withDuration: animationDuration) {
-            self.dimmedView.backgroundColor = .black.withAlphaComponent(0.7)
+            self.dimmedView.backgroundColor = .dim
             self.view.layoutIfNeeded()
         }
     }
