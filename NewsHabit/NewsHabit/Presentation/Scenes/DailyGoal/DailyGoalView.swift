@@ -22,13 +22,22 @@ final class DailyGoalView: UIView {
         return label
     }()
     
-    private let infoLabel = {
+    private let labelStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        return stackView
+    }()
+    
+    private let guideLabel = {
         let label = UILabel()
         label.text = "매일 조금씩 읽는 습관을 만들어 가요"
         label.font = .medium(size: 14)
+        label.setLineHeight(20)
         label.textColor = .labelAssistive
         return label
     }()
+    
+    private let infoLabel = InfoLabel("변경 사항은 저장 후 다음 날부터 적용됩니다")
     
     let collectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -39,50 +48,55 @@ final class DailyGoalView: UIView {
         return collectionView
     }()
     
-    let startButton = ConfirmButton(title: "시작하기")
-    
-    // MARK: - Init
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupLayout()
-    }
-    
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var ctaButton = ConfirmButton(title: "")
     
     // MARK: - Setup Methods
     
-    private func setupLayout() {
-        addSubview(stepBar)
-        stepBar.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview().inset(20)
-            make.height.equalTo(6)
-        }
-        
-        addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(stepBar.snp.bottom).offset(28)
-            make.leading.equalToSuperview().inset(20)
-        }
-        
-        addSubview(infoLabel)
-        infoLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(8)
-            make.leading.equalToSuperview().inset(20)
+    func setupLayout(with usage: ComponentUsage) {
+        switch usage {
+        case .onboarding:
+            ctaButton = ConfirmButton(title: "시작하기")
+            
+            addSubview(stepBar)
+            stepBar.snp.makeConstraints { make in
+                make.top.leading.trailing.equalToSuperview().inset(20)
+                make.height.equalTo(6)
+            }
+            
+            addSubview(titleLabel)
+            titleLabel.snp.makeConstraints { make in
+                make.top.equalTo(stepBar.snp.bottom).offset(28)
+                make.leading.equalToSuperview().inset(20)
+            }
+            
+            addSubview(labelStackView)
+            labelStackView.snp.makeConstraints { make in
+                make.top.equalTo(titleLabel.snp.bottom).offset(8)
+                make.leading.trailing.equalToSuperview().inset(20)
+            }
+            
+            labelStackView.addArrangedSubview(guideLabel)
+        case .settings:
+            ctaButton = ConfirmButton(title: "다음")
+            
+            addSubview(labelStackView)
+            labelStackView.snp.makeConstraints { make in
+                make.top.leading.trailing.equalToSuperview().inset(20)
+            }
+            
+            labelStackView.addArrangedSubview(guideLabel)
+            labelStackView.addArrangedSubview(infoLabel)
         }
         
         addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(infoLabel.snp.bottom).offset(28)
+            make.top.equalTo(labelStackView.snp.bottom).offset(28)
             make.leading.trailing.equalToSuperview().inset(20)
             make.bottom.equalToSuperview()
         }
         
-        addSubview(startButton)
-        startButton.snp.makeConstraints { make in
+        addSubview(ctaButton)
+        ctaButton.snp.makeConstraints { make in
             make.bottom.equalToSuperview().inset(34)
             make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalTo(52)

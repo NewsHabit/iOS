@@ -8,16 +8,23 @@
 import Combine
 import UIKit
 
+protocol DailyGoalViewControllerDelegate: AnyObject {
+    func dailyGoalDidFinish()
+}
+
 final class DailyGoalViewController: BaseViewController<DailyGoalView> {
+    weak var delegate: DailyGoalViewControllerDelegate?
     private let viewModel: DailyGoalViewModel
     private var dataSource: UICollectionViewDiffableDataSource<Int, DailyGoalModel>!
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init
     
-    init(viewModel: DailyGoalViewModel) {
+    init(viewModel: DailyGoalViewModel, for usage: ComponentUsage) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        contentView.setupLayout(with: usage)
+        if usage == .settings { configureNavigationBar(with: .back("읽기 목표")) }
     }
     
     @available(*, unavailable)
@@ -52,6 +59,20 @@ final class DailyGoalViewController: BaseViewController<DailyGoalView> {
     }
     
     private func setupBindings() {
+        // action
+        backButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.dailyGoalDidFinish()
+            }
+            .store(in: &cancellables)
+        
+        ctaButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.dailyGoalDidFinish()
+            }
+            .store(in: &cancellables)
+        
+        // state
         viewModel.state.dailyGoalModels
             .sink { [weak self] models in
                 self?.applySnapshot(with: models)
@@ -86,7 +107,7 @@ private extension DailyGoalViewController {
         contentView.collectionView
     }
     
-    var startButton: UIButton {
-        contentView.startButton
+    var ctaButton: UIButton {
+        contentView.ctaButton
     }
 }

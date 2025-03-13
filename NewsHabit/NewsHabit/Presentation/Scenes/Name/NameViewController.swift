@@ -8,8 +8,26 @@
 import Combine
 import UIKit
 
+protocol NameViewControllerDelegate: AnyObject {
+    func nameDidFinish()
+}
+
 final class NameViewController: BaseViewController<NameView> {
+    weak var delegate: NameViewControllerDelegate?
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Init
+    
+    init(for usage: ComponentUsage) {
+        super.init(nibName: nil, bundle: nil)
+        contentView.setupLayout(with: usage)
+        if usage == .settings { configureNavigationBar(with: .back("이름")) }
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Lifecycle
     
@@ -22,6 +40,12 @@ final class NameViewController: BaseViewController<NameView> {
     // MARK: - Setup Methods
     
     private func setupBindings() {
+        backButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.nameDidFinish()
+            }
+            .store(in: &cancellables)
+        
         keyboardShowPublisher
             .sink { [weak self] keyboardHeight in
                 self?.contentView.updateNextButtonBottomConstraint(keyboardHeight)
@@ -36,7 +60,7 @@ final class NameViewController: BaseViewController<NameView> {
         
         nextButton.tapPublisher
             .sink { [weak self] in
-                self?.navigate(to: Factory.makeCategoryViewController(), animated: false)
+                self?.delegate?.nameDidFinish()
             }
             .store(in: &cancellables)
     }

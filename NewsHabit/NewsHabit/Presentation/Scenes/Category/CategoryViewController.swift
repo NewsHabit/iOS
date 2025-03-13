@@ -8,16 +8,23 @@
 import Combine
 import UIKit
 
+protocol CategoryViewControllerDelegate: AnyObject {
+    func categoryDidFinish()
+}
+
 final class CategoryViewController: BaseViewController<CategoryView> {
+    weak var delegate: CategoryViewControllerDelegate?
     private let viewModel: CategoryViewModel
     private var dataSource: UICollectionViewDiffableDataSource<Int, CategoryModel>!
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init
     
-    init(viewModel: CategoryViewModel) {
+    init(viewModel: CategoryViewModel, for usage: ComponentUsage) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        contentView.setupLayout(with: usage)
+        if usage == .settings { configureNavigationBar(with: .back("관심 카테고리")) }
     }
     
     @available(*, unavailable)
@@ -53,9 +60,15 @@ final class CategoryViewController: BaseViewController<CategoryView> {
     
     private func setupBindings() {
         // action
+        backButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.categoryDidFinish()
+            }
+            .store(in: &cancellables)
+        
         nextButton.tapPublisher
             .sink { [weak self] in
-                self?.navigate(to: Factory.makeDailyGoalViewController(), animated: false)
+                self?.delegate?.categoryDidFinish()
             }
             .store(in: &cancellables)
         
