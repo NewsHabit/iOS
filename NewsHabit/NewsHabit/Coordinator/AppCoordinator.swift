@@ -42,6 +42,7 @@ final class AppCoordinator: Coordinator {
     
     private func showMainFlow() {
         let navigationController = UINavigationController()
+        navigationController.isNavigationBarHidden = true
         window.rootViewController = navigationController
         
         let mainCoordinator = MainCoordinator(

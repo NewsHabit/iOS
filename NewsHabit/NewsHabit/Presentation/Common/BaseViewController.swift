@@ -40,7 +40,6 @@ class BaseViewController<View: UIView>: UIViewController {
     
     private func setupViewController() {
         view.backgroundColor = .background
-        navigationController?.isNavigationBarHidden = true
     }
     
     // 커스텀 네비게이션 바를 사용하지 않는 초기 레이아웃
