@@ -27,8 +27,9 @@ final class HomeView: UIView {
     
     let scrollView = {
         let scrollView = UIScrollView()
-        scrollView.showsHorizontalScrollIndicator = false
         scrollView.isPagingEnabled = true
+        scrollView.isScrollEnabled = false
+        scrollView.showsHorizontalScrollIndicator = false
         return scrollView
     }()
     
