@@ -26,7 +26,6 @@ final class TodayNewsView: UIView {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.bounces = false
         return tableView
     }()
     

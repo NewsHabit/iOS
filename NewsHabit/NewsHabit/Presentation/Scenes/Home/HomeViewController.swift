@@ -8,11 +8,17 @@
 import Combine
 import UIKit
 
+protocol HomeViewControllerDelegate: AnyObject {
+    func presentCategoryFilter()
+}
+
 final class HomeViewController: BaseViewController<HomeView> {
+    weak var delegate: HomeViewControllerDelegate?
     private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
     private var todayNewsDataSource: UITableViewDiffableDataSource<Int, NewsCellModel>!
     private var myRecordDataSource: UICollectionViewDiffableDataSource<Int, DayCellModel>!
+    private var bookmarkDataSource: UITableViewDiffableDataSource<Int, NewsCellModel>!
     
     // MARK: - Init
     
@@ -32,6 +38,7 @@ final class HomeViewController: BaseViewController<HomeView> {
         super.viewDidLoad()
         setupTodayNewsTableView()
         setupMyRecordCollectionView()
+        setupBookmarkTableView()
         setupBindings()
         viewModel.send(.viewDidLoad)
     }
@@ -61,6 +68,17 @@ final class HomeViewController: BaseViewController<HomeView> {
         )
     }
     
+    private func setupBookmarkTableView() {
+        bookmarkDataSource = .init(
+            tableView: bookmarkView.tableView,
+            cellProvider: { tableView, indexPath, itemIdentifier in
+                let cell = tableView.dequeueReusableCell(for: indexPath, cellType: NewsCell.self)
+                cell.configure(with: itemIdentifier)
+                return cell
+            }
+        )
+    }
+    
     private func setupBindings() {
         // action
         homeTab.valuePublisher
@@ -72,6 +90,12 @@ final class HomeViewController: BaseViewController<HomeView> {
             }
             .store(in: &cancellables)
         
+        bookmarkView.categoryFilterButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.presentCategoryFilter()
+            }
+            .store(in: &cancellables)
+        
         // state
         viewModel.state.allReadCount
             .sink { [weak self] allReadCount in
@@ -79,7 +103,7 @@ final class HomeViewController: BaseViewController<HomeView> {
             }
             .store(in: &cancellables)
         
-        viewModel.state.newsModels
+        viewModel.state.todayNewsModels
             .sink { [weak self] models in
                 self?.applyTodayNewsSnapshot(with: models)
             }
@@ -109,12 +133,26 @@ final class HomeViewController: BaseViewController<HomeView> {
             }
             .store(in: &cancellables)
         
-        viewModel.state.dayCellModels
+        viewModel.state.myRecordModels
             .sink { [weak self] models in
                 self?.applyMyRecordSnapshot(with: models)
             }
             .store(in: &cancellables)
+        
+        viewModel.state.currentCategory
+            .sink { [weak self] category in
+                self?.bookmarkView.categoryFilterButton.updateCategory(with: category)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.state.bookmarkModels
+            .sink { [weak self] models in
+                self?.applyBookmarkSnapshot(with: models)
+            }
+            .store(in: &cancellables)
     }
+    
+    // MARK: - Apply Snapshot
     
     private func applyTodayNewsSnapshot(with models: [NewsCellModel]) {
         var snapshot = NSDiffableDataSourceSnapshot<Int, NewsCellModel>()
@@ -128,6 +166,13 @@ final class HomeViewController: BaseViewController<HomeView> {
         snapshot.appendSections([0])
         snapshot.appendItems(models, toSection: 0)
         myRecordDataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func applyBookmarkSnapshot(with models: [NewsCellModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, NewsCellModel>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(models, toSection: 0)
+        bookmarkDataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 

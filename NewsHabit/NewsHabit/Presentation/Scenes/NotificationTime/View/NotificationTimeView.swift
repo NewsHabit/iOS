@@ -49,7 +49,7 @@ final class NotificationTimeView: UIView {
     private func setupLayout() {
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(30)
+            make.top.equalToSuperview().inset(36)
             make.leading.equalToSuperview().inset(20)
         }
         

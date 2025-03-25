@@ -15,12 +15,14 @@ final class HomeViewModel: ViewModel {
     
     struct State {
         var allReadCount = PassthroughSubject<Int, Never>()
-        var newsModels = CurrentValueSubject<[NewsCellModel], Never>([])
+        var todayNewsModels = CurrentValueSubject<[NewsCellModel], Never>([])
         var currentYearMonth = PassthroughSubject<String, Never>()
         var isPrevButtonEnabled = PassthroughSubject<Bool, Never>()
         var isNextButtonEnabled = PassthroughSubject<Bool, Never>()
         var monthlyAllReadCount = PassthroughSubject<Int, Never>()
-        var dayCellModels = CurrentValueSubject<[DayCellModel], Never>([])
+        var myRecordModels = CurrentValueSubject<[DayCellModel], Never>([])
+        var currentCategory = CurrentValueSubject<String, Never>("전체 카테고리")
+        var bookmarkModels = CurrentValueSubject<[NewsCellModel], Never>([])
     }
     
     // MARK: - Properties
@@ -49,7 +51,7 @@ final class HomeViewModel: ViewModel {
     
     private func initializeState() {
         state.allReadCount.send(8)
-        state.newsModels.send([
+        state.todayNewsModels.send([
             NewsCellModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .science, isUnread: true),
             NewsCellModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .lifestyle, isUnread: true),
             NewsCellModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .economy, isUnread: true)
@@ -58,7 +60,7 @@ final class HomeViewModel: ViewModel {
         state.isPrevButtonEnabled.send(true)
         state.isNextButtonEnabled.send(false)
         state.monthlyAllReadCount.send(8)
-        state.dayCellModels.send([
+        state.myRecordModels.send([
             DayCellModel(type: .empty),
             DayCellModel(type: .empty),
             DayCellModel(type: .empty),
@@ -95,6 +97,12 @@ final class HomeViewModel: ViewModel {
             DayCellModel(day: "29", type: .unread),
             DayCellModel(day: "30", type: .unread),
             DayCellModel(day: "31", type: .unread),
+        ])
+        state.bookmarkModels.send([
+            NewsCellModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .science),
+            NewsCellModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .lifestyle),
+            NewsCellModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .economy),
+            NewsCellModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .politics)
         ])
     }
 }

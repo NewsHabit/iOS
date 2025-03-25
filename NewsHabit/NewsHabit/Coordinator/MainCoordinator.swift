@@ -61,6 +61,7 @@ final class MainCoordinator: Coordinator {
     private func makeHomeViewController() -> HomeViewController {
         let viewModel = HomeViewModel()
         let viewController = HomeViewController(viewModel: viewModel)
+        viewController.delegate = self
         return viewController
     }
     
@@ -74,6 +75,12 @@ final class MainCoordinator: Coordinator {
         let viewController = SettingsViewController()
         viewController.delegate = self
         return viewController
+    }
+    
+    private func showCategoryFilterViewController() {
+        let viewModel = CategoryFilterViewModel()
+        let viewController = CategoryFilterViewController(viewModel: viewModel)
+        navigationController.present(viewController, animated: false)
     }
     
     private func showNameViewController() {
@@ -111,6 +118,12 @@ final class MainCoordinator: Coordinator {
         let viewController = NotificationTimeViewController(viewModel: viewModel)
         viewController.delegate = delegate
         navigationController.present(viewController, animated: false)
+    }
+}
+
+extension MainCoordinator: HomeViewControllerDelegate {
+    func presentCategoryFilter() {
+        showCategoryFilterViewController()
     }
 }
 
