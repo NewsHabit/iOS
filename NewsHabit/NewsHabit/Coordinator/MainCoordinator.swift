@@ -59,7 +59,8 @@ final class MainCoordinator: Coordinator {
     }
     
     private func makeHomeViewController() -> HomeViewController {
-        let viewController = HomeViewController()
+        let viewModel = HomeViewModel()
+        let viewController = HomeViewController(viewModel: viewModel)
         return viewController
     }
     

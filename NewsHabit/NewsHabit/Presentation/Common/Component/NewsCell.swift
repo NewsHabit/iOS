@@ -59,7 +59,7 @@ final class NewsCell: UITableViewCell, Reusable {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
+        setupCell()
         setupLayout()
     }
     
@@ -75,6 +75,11 @@ final class NewsCell: UITableViewCell, Reusable {
     }
     
     // MARK: - Setup Methods
+    
+    private func setupCell() {
+        backgroundColor = .clear
+        selectionStyle = .none
+    }
     
     private func setupLayout() {
         contentView.addSubview(stackView)
