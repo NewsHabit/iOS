@@ -27,31 +27,23 @@ final class MainCoordinator: Coordinator {
     private func showTabBarController() {
         let viewController = TabBarController()
         
-        let homeViewController = HomeViewController()
-        let trendingViewController = TrendingViewController()
-        let settingsViewController = SettingsViewController()
-        settingsViewController.delegate = self
-        
-        viewController.setViewControllers(
-            [
-                makeViewController(
-                    from: homeViewController,
-                    image: .home,
-                    selectedImage: .homeFill
-                ),
-                makeViewController(
-                    from: trendingViewController,
-                    image: .news,
-                    selectedImage: .newsFill
-                ),
-                makeViewController(
-                    from: settingsViewController,
-                    image: .settings,
-                    selectedImage: .settingsFill
-                )
-            ],
-            animated: false
-        )
+        viewController.setViewControllers([
+            makeViewController(
+                from: makeHomeViewController(),
+                image: .home,
+                selectedImage: .homeFill
+            ),
+            makeViewController(
+                from: makeTrendingViewController(),
+                image: .news,
+                selectedImage: .newsFill
+            ),
+            makeViewController(
+                from: makeSettingsViewController(),
+                image: .settings,
+                selectedImage: .settingsFill
+            )
+        ],animated: false)
         
         navigationController.pushViewController(viewController, animated: false)
     }
@@ -63,6 +55,23 @@ final class MainCoordinator: Coordinator {
     ) -> UIViewController {
         let tabBarItem = UITabBarItem(title: nil, image: image, selectedImage: selectedImage)
         viewController.tabBarItem = tabBarItem
+        return viewController
+    }
+    
+    private func makeHomeViewController() -> HomeViewController {
+        let viewController = HomeViewController()
+        return viewController
+    }
+    
+    private func makeTrendingViewController() -> TrendingViewController {
+        let viewModel = TrendingViewModel()
+        let viewController = TrendingViewController(viewModel: viewModel)
+        return viewController
+    }
+    
+    private func makeSettingsViewController() -> SettingsViewController {
+        let viewController = SettingsViewController()
+        viewController.delegate = self
         return viewController
     }
     

@@ -32,4 +32,20 @@ extension UILabel {
         
         self.attributedText = attributedString
     }
+    
+    func setAttributedText(highlight: String, color: UIColor, font: UIFont) {
+        guard let fullText = text else { return }
+        let attributedString = NSMutableAttributedString(string: fullText)
+        
+        if let range = fullText.range(of: highlight) {
+            let nsRange = NSRange(range, in: fullText)
+            
+            attributedString.addAttributes([
+                .foregroundColor: color,
+                .font: font
+            ], range: nsRange)
+        }
+        
+        self.attributedText = attributedString
+    }
 }

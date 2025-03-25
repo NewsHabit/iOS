@@ -14,6 +14,7 @@ final class SettingsView: UIView {
         let label = UILabel()
         label.text = "설정"
         label.font = .bold(size: 24)
+        label.textColor = .labelNormal
         label.setLineHeight(34)
         return label
     }()
