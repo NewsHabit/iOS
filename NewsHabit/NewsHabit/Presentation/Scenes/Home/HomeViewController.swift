@@ -9,29 +9,38 @@ import Combine
 import UIKit
 
 final class HomeViewController: BaseViewController<HomeView> {
+    private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var dataSource: UITableViewDiffableDataSource<Int, NewsModel>!
+    private var todayNewsDataSource: UITableViewDiffableDataSource<Int, NewsCellModel>!
+    private var myRecordDataSource: UICollectionViewDiffableDataSource<Int, DayCellModel>!
+    
+    // MARK: - Init
+    
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
+        setupTodayNewsTableView()
+        setupMyRecordCollectionView()
         setupBindings()
-        // 임시
-        allReadView.configure(with: 8)
-        applySnapshot(with: [
-            NewsModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .science, isUnread: true),
-            NewsModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .lifestyle, isUnread: true),
-            NewsModel(title: "애플, 19일 신제품 출시 예고... “홈버튼 없앤 아이폰 SE4”", description: "애플이 오는 19일 신제품을 출시할 계획이라고 밝혔다. 이번에 출시될 모델을 두고 업계에서는 보급형 아이폰 SE4로 관측하고 있다. 팀 쿡 애플 최고경영자(CEO)는 13일(현지시간) 소셜미디어 엑스(옛 트위터)에 “새로운 가족을 만날 준비를 하라. 2월 19일 애플 출시”라고 알렸다.", category: .economy, isUnread: true)
-        ])
+        viewModel.send(.viewDidLoad)
     }
     
     // MARK: - Setup Methods
     
-    private func setupTableView() {
-        dataSource = .init(
-            tableView: todayNewsTableView,
+    private func setupTodayNewsTableView() {
+        todayNewsDataSource = .init(
+            tableView: todayNewsView.tableView,
             cellProvider: { tableView, indexPath, itemIdentifier in
                 let cell = tableView.dequeueReusableCell(for: indexPath, cellType: NewsCell.self)
                 cell.configure(with: itemIdentifier)
@@ -40,7 +49,20 @@ final class HomeViewController: BaseViewController<HomeView> {
         )
     }
     
+    private func setupMyRecordCollectionView() {
+        myRecordView.collectionView.delegate = self
+        myRecordDataSource = .init(
+            collectionView: myRecordView.collectionView,
+            cellProvider: { collectionView, indexPath, itemIdentifier in
+                let cell = collectionView.dequeueReusableCell(for: indexPath, cellType: DayCell.self)
+                cell.configure(with: itemIdentifier)
+                return cell
+            }
+        )
+    }
+    
     private func setupBindings() {
+        // action
         homeTab.valuePublisher
             .sink { [weak self] selectedIndex in
                 guard let self = self else { return }
@@ -49,13 +71,76 @@ final class HomeViewController: BaseViewController<HomeView> {
                 scrollView.setContentOffset(contentOffset, animated: true)
             }
             .store(in: &cancellables)
+        
+        // state
+        viewModel.state.allReadCount
+            .sink { [weak self] allReadCount in
+                self?.todayNewsView.allReadView.configure(with: allReadCount)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.state.newsModels
+            .sink { [weak self] models in
+                self?.applyTodayNewsSnapshot(with: models)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.state.currentYearMonth
+            .sink { [weak self] currentYearMonth in
+                self?.myRecordView.yearMonthLabel.text = currentYearMonth
+            }
+            .store(in: &cancellables)
+        
+        viewModel.state.isPrevButtonEnabled
+            .sink { [weak self] isEnabled in
+                self?.myRecordView.prevButton.isEnabled = isEnabled
+            }
+            .store(in: &cancellables)
+        
+        viewModel.state.isNextButtonEnabled
+            .sink { [weak self] isEnabled in
+                self?.myRecordView.nextButton.isEnabled = isEnabled
+            }
+            .store(in: &cancellables)
+        
+        viewModel.state.monthlyAllReadCount
+            .sink { [weak self] monthlyAllReadCount in
+                self?.myRecordView.monthlyAllReadLabel.text = String(monthlyAllReadCount)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.state.dayCellModels
+            .sink { [weak self] models in
+                self?.applyMyRecordSnapshot(with: models)
+            }
+            .store(in: &cancellables)
     }
     
-    private func applySnapshot(with models: [NewsModel]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, NewsModel>()
+    private func applyTodayNewsSnapshot(with models: [NewsCellModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, NewsCellModel>()
         snapshot.appendSections([0])
         snapshot.appendItems(models, toSection: 0)
-        dataSource.apply(snapshot, animatingDifferences: true)
+        todayNewsDataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func applyMyRecordSnapshot(with models: [DayCellModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, DayCellModel>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(models, toSection: 0)
+        myRecordDataSource.apply(snapshot, animatingDifferences: true)
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        // 셀 간격: 10, 가로:세로 = 7:6
+        let width: CGFloat = (collectionView.frame.width - 60.0) / 7.0
+        let height: CGFloat = width * 6.0 / 7.0
+        return CGSize(width: width, height: height)
     }
 }
 
@@ -68,11 +153,15 @@ private extension HomeViewController {
         contentView.scrollView
     }
     
-    var allReadView: AllReadView {
-        contentView.todayNewsView.allReadView
+    var todayNewsView: TodayNewsView {
+        contentView.todayNewsView
     }
     
-    var todayNewsTableView: UITableView {
-        contentView.todayNewsView.tableView
+    var myRecordView: MyRecordView {
+        contentView.myRecordView
+    }
+    
+    var bookmarkView: BookmarkView {
+        contentView.bookmarkView
     }
 }

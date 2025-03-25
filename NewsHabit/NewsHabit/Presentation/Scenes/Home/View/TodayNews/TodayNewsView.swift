@@ -22,6 +22,7 @@ final class TodayNewsView: UIView {
     let tableView = {
         let tableView = UITableView()
         tableView.registerCell(cellType: NewsCell.self)
+        tableView.backgroundColor = .clear
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
