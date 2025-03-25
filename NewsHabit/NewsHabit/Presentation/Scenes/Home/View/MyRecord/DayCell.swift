@@ -43,17 +43,21 @@ final class DayCell: UICollectionViewCell, Reusable {
     
     func configure(with model: DayCellModel) {
         dayLabel.text = model.day
-        if model.isToday {
+        switch model.type {
+        case .empty:
+            layer.borderColor = UIColor.white.cgColor
+            backgroundColor = .white
+        case .today:
             dayLabel.font = .semibold(size: 13)
             dayLabel.textColor = .primaryStrong
             layer.borderColor = UIColor.primaryAssistive.cgColor
             backgroundColor = .primaryLight
-        } else if model.isRead {
+        case .read:
             dayLabel.font = .semibold(size: 13)
             dayLabel.textColor = .white
             layer.borderColor = UIColor.primaryNormal.cgColor
             backgroundColor = .primaryNormal
-        } else {
+        case .unread:
             dayLabel.font = .medium(size: 13)
             dayLabel.textColor = .labelDisabled
             layer.borderColor = UIColor.fillAssistive.cgColor

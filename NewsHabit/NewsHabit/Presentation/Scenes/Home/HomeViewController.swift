@@ -11,7 +11,8 @@ import UIKit
 final class HomeViewController: BaseViewController<HomeView> {
     private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var dataSource: UITableViewDiffableDataSource<Int, NewsModel>!
+    private var todayNewsDataSource: UITableViewDiffableDataSource<Int, NewsCellModel>!
+    private var myRecordDataSource: UICollectionViewDiffableDataSource<Int, DayCellModel>!
     
     // MARK: - Init
     
@@ -29,18 +30,31 @@ final class HomeViewController: BaseViewController<HomeView> {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupTableView()
+        setupTodayNewsTableView()
+        setupMyRecordCollectionView()
         setupBindings()
         viewModel.send(.viewDidLoad)
     }
     
     // MARK: - Setup Methods
     
-    private func setupTableView() {
-        dataSource = .init(
+    private func setupTodayNewsTableView() {
+        todayNewsDataSource = .init(
             tableView: todayNewsView.tableView,
             cellProvider: { tableView, indexPath, itemIdentifier in
                 let cell = tableView.dequeueReusableCell(for: indexPath, cellType: NewsCell.self)
+                cell.configure(with: itemIdentifier)
+                return cell
+            }
+        )
+    }
+    
+    private func setupMyRecordCollectionView() {
+        myRecordView.collectionView.delegate = self
+        myRecordDataSource = .init(
+            collectionView: myRecordView.collectionView,
+            cellProvider: { collectionView, indexPath, itemIdentifier in
+                let cell = collectionView.dequeueReusableCell(for: indexPath, cellType: DayCell.self)
                 cell.configure(with: itemIdentifier)
                 return cell
             }
@@ -65,9 +79,9 @@ final class HomeViewController: BaseViewController<HomeView> {
             }
             .store(in: &cancellables)
         
-        viewModel.state.todayNewsModels
+        viewModel.state.newsModels
             .sink { [weak self] models in
-                self?.applySnapshot(with: models)
+                self?.applyTodayNewsSnapshot(with: models)
             }
             .store(in: &cancellables)
         
@@ -94,13 +108,39 @@ final class HomeViewController: BaseViewController<HomeView> {
                 self?.myRecordView.monthlyAllReadLabel.text = String(monthlyAllReadCount)
             }
             .store(in: &cancellables)
+        
+        viewModel.state.dayCellModels
+            .sink { [weak self] models in
+                self?.applyMyRecordSnapshot(with: models)
+            }
+            .store(in: &cancellables)
     }
     
-    private func applySnapshot(with models: [NewsModel]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, NewsModel>()
+    private func applyTodayNewsSnapshot(with models: [NewsCellModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, NewsCellModel>()
         snapshot.appendSections([0])
         snapshot.appendItems(models, toSection: 0)
-        dataSource.apply(snapshot, animatingDifferences: true)
+        todayNewsDataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func applyMyRecordSnapshot(with models: [DayCellModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, DayCellModel>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(models, toSection: 0)
+        myRecordDataSource.apply(snapshot, animatingDifferences: true)
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        // 셀 간격: 10, 가로:세로 = 7:6
+        let width: CGFloat = (collectionView.frame.width - 60.0) / 7.0
+        let height: CGFloat = width * 6.0 / 7.0
+        return CGSize(width: width, height: height)
     }
 }
 

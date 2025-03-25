@@ -124,7 +124,7 @@ final class NewsCell: UITableViewCell, Reusable {
     
     // MARK: - Configure Methods
     
-    func configure(with model: NewsModel) {
+    func configure(with model: NewsCellModel) {
         categoryLabel.text = model.category.name
         titleLabel.text = model.title
         descriptionLabel.text = model.description

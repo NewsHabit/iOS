@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NewsModel: Hashable {
+struct NewsCellModel: Hashable {
     let id = UUID()
     let title: String
     let description: String

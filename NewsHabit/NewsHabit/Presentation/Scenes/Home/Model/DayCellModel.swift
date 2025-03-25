@@ -9,7 +9,11 @@ import Foundation
 
 struct DayCellModel: Hashable {
     let id = UUID()
-    let day: String
-    let isRead: Bool
-    let isToday: Bool
+    let day: String?
+    let type: DayCellType
+    
+    init(day: String? = nil, type: DayCellType) {
+        self.day = day
+        self.type = type
+    }
 }
