@@ -46,6 +46,11 @@ class BottomSheetViewController<View: UIView>: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        indicator.layer.cornerRadius = indicator.frame.height / 2
+    }
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
