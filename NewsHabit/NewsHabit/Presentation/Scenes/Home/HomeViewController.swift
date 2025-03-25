@@ -8,7 +8,12 @@
 import Combine
 import UIKit
 
+protocol HomeViewControllerDelegate: AnyObject {
+    func presentCategoryFilter()
+}
+
 final class HomeViewController: BaseViewController<HomeView> {
+    weak var delegate: HomeViewControllerDelegate?
     private let viewModel: HomeViewModel
     private var cancellables = Set<AnyCancellable>()
     private var todayNewsDataSource: UITableViewDiffableDataSource<Int, NewsCellModel>!
@@ -82,6 +87,12 @@ final class HomeViewController: BaseViewController<HomeView> {
                 let contentOffsetX = CGFloat(selectedIndex) * view.frame.width
                 let contentOffset = CGPoint(x: contentOffsetX, y: 0)
                 scrollView.setContentOffset(contentOffset, animated: true)
+            }
+            .store(in: &cancellables)
+        
+        bookmarkView.categoryFilterButton.tapPublisher
+            .sink { [weak self] in
+                self?.delegate?.presentCategoryFilter()
             }
             .store(in: &cancellables)
         
