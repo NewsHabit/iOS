@@ -14,6 +14,8 @@ final class HomeView: UIView {
         let label = UILabel()
         label.text = "뉴스를 습관처럼, 뉴빗"
         label.font = .bold(size: 24)
+        label.textColor = .labelNormal
+        label.setLineHeight(34)
         return label
     }()
     
