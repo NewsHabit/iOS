@@ -21,7 +21,7 @@ final class NotificationTimeViewController: BottomSheetViewController<Notificati
     
     init(viewModel: NotificationTimeViewModel) {
         self.viewModel = viewModel
-        super.init(bottomSheetHeight: 583)
+        super.init(bottomSheetHeight: 591)
     }
     
     // MARK: - Lifecycle

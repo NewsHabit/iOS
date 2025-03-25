@@ -78,7 +78,8 @@ final class MainCoordinator: Coordinator {
     }
     
     private func showCategoryFilterViewController() {
-        let viewController = CategoryFilterViewController()
+        let viewModel = CategoryFilterViewModel()
+        let viewController = CategoryFilterViewController(viewModel: viewModel)
         navigationController.present(viewController, animated: false)
     }
     
